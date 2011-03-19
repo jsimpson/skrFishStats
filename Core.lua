@@ -108,7 +108,10 @@ function displayUpdate(self)
     local liveDisplay = {}
     local result
 
-    if not a.db.stats[zone][subzone] then return end
+    if not a.db.stats[zone][subzone] then
+        display:Hide()
+        return
+    end
 
     self.caption:SetText(format("|cff44ccff%s|r: |cff44ccff%s|r", zone, subzone))
     height = height + 20
@@ -171,12 +174,16 @@ function Stats:Create()
 end
 
 function Stats:Toggle()
-    if not display then Stats:Show(stats) end
-
-    if display:IsVisible() then
-        display:Hide()
+    if not display then
+        Stats:Show(Stats)
+        return
     else
-        display:Show()
+        if display:IsVisible() then
+            display:Hide()
+        else
+            display:Show()
+            display:Update()
+        end
     end
 end
 
@@ -202,7 +209,7 @@ local function logCatch(name, quantity)
     a.db.stats[zone][subzone][name] = total
 
     if a.db.liveDisplay then
-        if not display then Stats:Show(stats) end
+        if not display then Stats:Show(Stats) end
 
         if display:IsVisible() then
             display:Update()
@@ -218,9 +225,28 @@ function a:checkLogging()
         local mainHandId = tonumber(GetInventoryItemID("player", INVSLOT_MAINHAND) or nil)
         if mainHandId and poles[mainHandId] then
             a.db.logging = true
+
+            if a.db.liveDisplay then
+                if not display then Stats:Show(Stats) end
+
+                if display:IsVisible() then
+                    display:Update()
+                else
+                    display:Show()
+                    display:Update()
+                end
+            end
+
             return
         end
     end
+
+    if a.db.liveDisplay and display then
+        if display:IsVisible() then
+            display:Hide()
+        end
+    end
+
     a.db.logging = false
 end
 
@@ -267,16 +293,13 @@ end
 a.PLAYER_LOGOUT = a.checkLogging
 a.PLAYER_REGEN_DISABLED = a.checkLogging
 a.PLAYER_REGEN_ENABLED = a.checkLogging
+a.ZONE_CHANGED = a.checkLogging
 
 -- Slash Commands
-SlashCmdList["SFISHINGSTATS"] = function()
-    if not a.db.liveDisplay then
-        a.db.liveDisplay = true
-    end
-    Stats:Toggle()
-end
-SLASH_SFISHINGSTATS1 = "/sfishingstats"
-SLASH_SFISHINGSTATS2 = "/sfs"
+SlashCmdList["SKRFISHSTATS"] = function() Stats:Toggle() end
+SLASH_SKRFISHSTATS1 = "/skrfishdata"
+SLASH_SKRFISHSTATS2 = "/skrfish"
+SLASH_SKRFISHSTATS3 = "/skrfs"
 
 -- Register 
 a:RegisterEvent('PLAYER_LOGOUT')
@@ -284,4 +307,5 @@ a:RegisterEvent('PLAYER_REGEN_DISABLED')
 a:RegisterEvent('PLAYER_REGEN_ENABLED')
 a:RegisterEvent('LOOT_OPENED')
 a:RegisterEvent('UNIT_INVENTORY_CHANGED')
+a:RegisterEvent('ZONE_CHANGED')
 a:RegisterEvent('ADDON_LOADED')
