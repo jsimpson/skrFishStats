@@ -11,7 +11,7 @@ h3. Motivation
 
 Obviously this was inspired by FishingBuddy. But, I don't really want the overwhelming majority of FishingBuddy's functionality. I really just want an addon that logs my fishing data and gives it to me in a presentable way.
 
-Be warned: This shit is <b>pretty sloppy</b> right now.
+I also borrowed aspects of this mod from a couple of other addons/authors.
 
 h3. To-Do
 
