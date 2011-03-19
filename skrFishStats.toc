@@ -1,0 +1,11 @@
+## Interface: 40000
+
+## Title: |cffFF0000skr|rFishingStats
+## Notes: Lightweight fishing stats.
+## Author: Skroop @ US - Dark Iron
+## Version: 0.0.1
+## OptionalDeps: Ace3
+
+## SavedVariables: skrFishStatsDB
+
+Core.lua
