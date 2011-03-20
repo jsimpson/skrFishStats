@@ -107,6 +107,13 @@ local function getZone()
     return zone, subzone
 end
 
+local function isZoneLogged(zone, subzone)
+    if not a.db.stats[zone] or not a.db.stats[zone][subzone] then
+        return false
+    end
+    return true
+end
+
 local function getSkill()
     local _, _, _, fishing = GetProfessions()
     local _, _, rank, _, _, _, _, modifier = GetProfessionInfo(fishing)
@@ -164,11 +171,6 @@ local function displayUpdate(self)
     local rank, modifier, skill = getSkill()
     local t = {}
     local result = nil
-
-    if not a.db.stats[zone][subzone] then
-        display:Hide()
-        return
-    end
 
     self.caption:SetText(format("|cff44ccff%s|r: |cff44ccff%s|r", zone, subzone))
 
@@ -301,6 +303,10 @@ function a:checkLogging()
         local mainHandId = tonumber(GetInventoryItemID("player", INVSLOT_MAINHAND) or nil)
         if mainHandId and poles[mainHandId] then
             a.db.logging = true
+
+            local zone, subzone = getZone()
+            if not isZoneLogged(zone, subzone) then return end
+
             if not display then
                 Stats:Show()
             elseif not display:IsVisible() then
@@ -337,12 +343,12 @@ function a:LOOT_OPENED(event, autoloot)
 end
 
 function a:ZONE_CHANGED()
+    if not a.db.logging then return end
     local zone, subzone = getZone()
 
-    if not a.db.stats[zone][subzone] then
+    if not isZoneLogged(zone, subzone) then
         if display and display:IsVisible() then
             display:Hide()
-            return
         end
     else
         if display then
