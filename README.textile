@@ -15,5 +15,4 @@ I also borrowed aspects of this mod from a couple of other addons/authors.
 
 h3. To-Do
 
-* Deal with The Eventide (Coins)
 * Handle live display update/show better
