@@ -16,3 +16,7 @@ I also borrowed aspects of this mod from a couple of other addons/authors.
 h3. To-Do
 
 * Add "location browser" functionality
+
+h3. Misc
+
+* Discovered that areas along the Southfury river (moving between Azshara/Ashenvale/Durotar) don't trigger the ZONE_CHANGED event
