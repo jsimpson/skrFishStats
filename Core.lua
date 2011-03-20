@@ -44,9 +44,39 @@ local coinsCopper = {
 }
 
 local coinsSilver = {
+    "A Peasant's Silver Coin",
+    "Aegwynn's Silver Coin",
+    "Alleria's Silver Coin",
+    "Antonidas' Silver Coin",
+    "Arcanist Doan's Silver Coin",
+    "Fandral Staghelm's Silver Coin",
+    "High Tinker Mekkatorque's Silver Coin",
+    "Khadgar's Silver Coin",
+    "King Anasterian Sunstrider's Silver Coin",
+    "King Terenas Menethil's Silver Coin",
+    "King Varian Wrynn's Silver Coin",
+    "Maiev Shadowsong's Silver Coin",
+    "Medivh's Silver Coin",
+    "Muradin Bronzebeard's Silver Coin",
+    "Prince Magni Bronzebeard's Silver Coin",
 }
 
 local coinsGold = {
+    "Anduin Wrynn's Gold Coin",
+    "Archimonde's Gold Coin",
+    "Arthas' Gold Coin",
+    "Arugal's Gold Coin",
+    "Brann Bronzebeard's Gold Coin",
+    "Chromie's Gold Coin",
+    "Kel'Thuzad's Gold Coin",
+    "Lady Jaina Proudmoore's Gold Coin",
+    "Lady Katrana Prestor's Gold Coin",
+    "Prince Kael'thas Sunstrider's Gold Coin",
+    "Sylvanas Windrunner's Gold Coin",
+    "Teron's Gold Coin",
+    "Thrall's Gold Coin",
+    "Tirion Fordring's Gold Coin",
+    "Uther Lightbringer's Gold Coin",
 }
 
 local backdrop = {
@@ -101,11 +131,56 @@ function Stats.Hide(frame)
     display:Hide()
 end
 
+local function countCoins(t)
+    local copper, silver, gold = 0, 0, 0
+
+    for _, exception in pairs(coinsCopper) do
+        for i, fish in pairs(t) do
+            if fish.name == exception then
+                copper = copper + fish.count
+                table.remove(t, i)
+            end
+        end
+    end
+
+    for _, exception in pairs(coinsSilver) do
+        for i, fish in pairs(t) do
+            if fish.name == exception then
+                silver = silver + fish.count
+                table.remove(t, i)
+            end
+        end
+    end
+
+    for _, exception in pairs(coinsGold) do
+        for i, fish in pairs(t) do
+            if fish.name == exception then
+                gold = gold + fish.count
+                table.remove(t, i)
+            end
+        end
+    end
+
+    if copper > 0 then
+        table.insert(t, { name = "|cffff0000Copper Coins|r", count = copper })
+    end
+
+    if silver > 0 then
+        table.insert(t, { name = "|cffff0000Silver Coins|r", count = silver })
+    end
+
+    if gold > 0 then
+        table.insert(t, { name = "|cffff0000Gold Coins|r", count = gold })
+    end
+
+    return t
+end
+
 function displayUpdate(self)
-    local total, height, copper, silver, gold = 0, 0, 0, 0, 0
+    local total, height = 0, 0
     local zone, subzone = getZone()
     local rank, modifier, skill = getSkill()
-    local liveDisplay = {}
+    local t = {}
     local result
 
     if not a.db.stats[zone][subzone] then
@@ -114,25 +189,27 @@ function displayUpdate(self)
     end
 
     self.caption:SetText(format("|cff44ccff%s|r: |cff44ccff%s|r", zone, subzone))
-    height = height + 20
 
     for name, count in pairs(a.db.stats[zone][subzone]) do
         total = total + count
-        table.insert(liveDisplay, { name = name, count = count })
+        table.insert(t, { name = name, count = count })
+    end
+
+    if subzone == "The Eventide" then
+        t = countCoins(t)
     end
 
     self.overview:SetText(format("Total: |cffffff00%s|r | Skill: |cffffff00%s|r + |cff00ff00%s|r (|cff00ff00%s|r)", total, rank, modifier, skill))
-    height = height + 20
 
-    if next(liveDisplay) then
-        table.sort(liveDisplay, fishSortCount)
+    if next(t) then
+        table.sort(t, fishSortCount)
 
-        for _, fish in pairs(liveDisplay) do
-            height = height + 16
+        for _, fish in pairs(t) do
             result = (result or "")..format("%s (|cffffff00%d|r, |cff00ff00%.1f|r%%)\r\n", fish.name, fish.count, fish.count / total * 100)
         end
     end
 
+    height = (table.getn(t) * 15) + 32
     display.text:SetText(result)
     display:SetHeight(height)
 end
