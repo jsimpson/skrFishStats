@@ -344,6 +344,7 @@ end
 
 function a:ZONE_CHANGED()
     if not a.db.logging then return end
+
     local zone, subzone = getZone()
 
     if not isZoneLogged(zone, subzone) then
