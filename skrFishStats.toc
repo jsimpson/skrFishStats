@@ -4,8 +4,6 @@
 ## Notes: Lightweight fishing stats.
 ## Author: Skroop @ US - Dark Iron
 ## Version: 0.1
-## OptionalDeps: Ace3
-
 ## SavedVariables: skrFishStatsDB
 
 Core.lua
