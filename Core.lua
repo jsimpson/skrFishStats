@@ -292,6 +292,7 @@ local function logCatch(name, quantity)
             display:Update()
         else
             display:Show()
+            display:Update()
         end
     end
 end
@@ -304,11 +305,12 @@ function a:checkLogging()
             a.db.logging = true
 
             if a.db.liveDisplay then
-                if not display then Stats:Show(Stats) end
+                if not display then
+                    Stats:Show(Stats)
+                    return
+                end
 
-                if display:IsVisible() then
-                    display:Update()
-                else
+                if not display:IsVisible() then
                     display:Show()
                     display:Update()
                 end
