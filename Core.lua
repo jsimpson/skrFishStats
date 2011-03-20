@@ -192,7 +192,7 @@ local function displayUpdate(self)
         end
     end
 
-    height = (table.getn(t) * 12) + 62
+    height = (table.getn(t) * 12) + 56
     display.text:SetText(result)
     display:SetHeight(height)
 end
@@ -229,14 +229,16 @@ function Stats:Create()
     display:EnableMouse(true)
     display:RegisterForDrag("LeftButton")
 
-    local caption = display:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-    caption:SetPoint("TOPLEFT", 10, -10)
+    local caption = display:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge") -- size: 16
+    caption:SetPoint("TOPLEFT", 8, -8)
+    caption:SetJustifyH("LEFT")
 
     local overview = display:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
-    overview:SetPoint("TOPLEFT", 10, -30)
+    overview:SetPoint("TOPLEFT", 8, -24)
+    caption:SetJustifyH("LEFT")
 
-    local text = display:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    text:SetPoint("BOTTOMLEFT", 10, 0)
+    local text = display:CreateFontString(nil, "OVERLAY", "GameFontHighlight") -- size: 12
+    text:SetPoint("BOTTOMLEFT", 8, 0)
     text:SetJustifyH("LEFT")
 
     display.caption = caption
