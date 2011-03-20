@@ -1,6 +1,5 @@
-h3. What?
-
-skrFishStats is a very simple fishing statistics collection addon. It stores statistics about the types of fish you catch and offers ways to view this data.
+h3. What is it?
+skrFishStats is a very simple fishing statistics collection addon. It stores statistics about the types of fish you catch and offers ways to display this data.
 
 Right now, it only has a live display for the current zone/subzone that you are fishing in.
     * /skrfishdata
@@ -8,11 +7,9 @@ Right now, it only has a live display for the current zone/subzone that you are 
     * /skrfs
 
 h3. Motivation
-
 Obviously this was inspired by FishingBuddy. But, I don't really want the overwhelming majority of FishingBuddy's functionality. I really just want an addon that logs my fishing data and gives it to me in a presentable way.
 
 I also borrowed aspects of this mod from a couple of other addons/authors.
 
 h3. To-Do
-
-* Handle live display update/show better
+* Add "location browser" functionality
