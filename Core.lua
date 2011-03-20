@@ -145,15 +145,15 @@ local function countCoins(t)
     end
 
     if copper > 0 then
-        table.insert(t, { name = "|cffff0000Copper Coins|r", count = copper })
+        table.insert(t, { name = "|cffeda55fCopper Coins|r", count = copper })
     end
 
     if silver > 0 then
-        table.insert(t, { name = "|cffff0000Silver Coins|r", count = silver })
+        table.insert(t, { name = "|cffc7c7cfSilver Coins|r", count = silver })
     end
 
     if gold > 0 then
-        table.insert(t, { name = "|cffff0000Gold Coins|r", count = gold })
+        table.insert(t, { name = "|cffffd700Gold Coins|r", count = gold })
     end
 
     return t
