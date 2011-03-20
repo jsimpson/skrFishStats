@@ -114,23 +114,6 @@ local function getSkill()
     return rank, (modifier or 0), rank + (modifier or 0)
 end
 
--- Display
-local display
-
-function Stats.Show(frame)
-    if not display then display = Stats:Create() end
-
-    display:ClearAllPoints()
-    display:SetPoint("CENTER", UIParent, a.db.x and "BOTTOMLEFT" or "BOTTOM", a.db.x or 0, a.db.y or 221)
-
-    display:Show()
-    display:Update()
-end
-
-function Stats.Hide(frame)
-    display:Hide()
-end
-
 local function countCoins(t)
     local copper, silver, gold = 0, 0, 0
 
@@ -174,6 +157,23 @@ local function countCoins(t)
     end
 
     return t
+end
+
+-- Display
+local display
+
+function Stats.Show(frame)
+    if not display then display = Stats:Create() end
+
+    display:ClearAllPoints()
+    display:SetPoint("CENTER", UIParent, a.db.x and "BOTTOMLEFT" or "BOTTOM", a.db.x or 0, a.db.y or 221)
+
+    display:Show()
+    display:Update()
+end
+
+function Stats.Hide(frame)
+    display:Hide()
 end
 
 function displayUpdate(self)
