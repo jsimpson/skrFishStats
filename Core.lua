@@ -125,7 +125,6 @@ local function countCoins(t)
             end
         end
     end
-
     for _, exception in pairs(coinsSilver) do
         for i, fish in pairs(t) do
             if fish.name == exception then
@@ -134,7 +133,6 @@ local function countCoins(t)
             end
         end
     end
-
     for _, exception in pairs(coinsGold) do
         for i, fish in pairs(t) do
             if fish.name == exception then
@@ -147,11 +145,9 @@ local function countCoins(t)
     if copper > 0 then
         table.insert(t, { name = "|cffeda55fCopper Coins|r", count = copper })
     end
-
     if silver > 0 then
         table.insert(t, { name = "|cffc7c7cfSilver Coins|r", count = silver })
     end
-
     if gold > 0 then
         table.insert(t, { name = "|cffffd700Gold Coins|r", count = gold })
     end
@@ -162,26 +158,12 @@ end
 -- Display
 local display
 
-function Stats.Show(frame)
-    if not display then display = Stats:Create() end
-
-    display:ClearAllPoints()
-    display:SetPoint("CENTER", UIParent, a.db.x and "BOTTOMLEFT" or "BOTTOM", a.db.x or 0, a.db.y or 221)
-
-    display:Show()
-    display:Update()
-end
-
-function Stats.Hide(frame)
-    display:Hide()
-end
-
-function displayUpdate(self)
+local function displayUpdate(self)
     local total, height = 0, 0
     local zone, subzone = getZone()
     local rank, modifier, skill = getSkill()
     local t = {}
-    local result
+    local result = nil
 
     if not a.db.stats[zone][subzone] then
         display:Hide()
@@ -205,13 +187,28 @@ function displayUpdate(self)
         table.sort(t, fishSortCount)
 
         for _, fish in pairs(t) do
-            result = (result or "")..format("%s (|cffffff00%d|r, |cff00ff00%.1f|r%%)\r\n", fish.name, fish.count, fish.count / total * 100)
+            local percent = fish.count / total * 100
+            result = (result or "")..format("%s (|cffffff00%d|r, |cff00ff00%.1f|r%%)\n", fish.name, fish.count, percent)
         end
     end
 
-    height = (table.getn(t) * 15) + 32
+    height = (table.getn(t) * 12) + 62
     display.text:SetText(result)
     display:SetHeight(height)
+end
+
+function Stats.Show()
+    if not display then display = Stats:Create() end
+
+    display:ClearAllPoints()
+    display:SetPoint("CENTER", UIParent, a.db.x and "BOTTOMLEFT" or "BOTTOM", a.db.x or 0, a.db.y or 221)
+
+    display:Show()
+    display:Update()
+end
+
+function Stats.Hide()
+    display:Hide()
 end
 
 function Stats:Create()
@@ -252,7 +249,7 @@ end
 
 function Stats:Toggle()
     if not display then
-        Stats:Show(Stats)
+        Stats:Show()
         return
     else
         if display:IsVisible() then
@@ -285,16 +282,15 @@ local function logCatch(name, quantity)
     total = total + quantity
     a.db.stats[zone][subzone][name] = total
 
-    if a.db.liveDisplay then
-        if not display then Stats:Show(Stats) end
-
-        if display:IsVisible() then
-            display:Update()
-        else
-            display:Show()
-            display:Update()
-        end
+    if not display then
+        Stats:Show()
+        return
     end
+
+    if not display:IsVisible() then
+        display:Show()
+    end
+    display:Update()
 end
 
 -- Check Enable/Disable
@@ -303,30 +299,19 @@ function a:checkLogging()
         local mainHandId = tonumber(GetInventoryItemID("player", INVSLOT_MAINHAND) or nil)
         if mainHandId and poles[mainHandId] then
             a.db.logging = true
-
-            if a.db.liveDisplay then
-                if not display then
-                    Stats:Show(Stats)
-                    return
-                end
-
-                if not display:IsVisible() then
-                    display:Show()
-                    display:Update()
-                end
+            if not display then
+                Stats:Show()
+            elseif not display:IsVisible() then
+                display:Show()
+                display:Update()
             end
-
-            return
+        else
+            if display and display:IsVisible() then
+                display:Hide()
+            end
+            a.db.logging = false
         end
     end
-
-    if a.db.liveDisplay and display then
-        if display:IsVisible() then
-            display:Hide()
-        end
-    end
-
-    a.db.logging = false
 end
 
 -- Event Handlers
@@ -337,14 +322,36 @@ a:SetScript('OnEvent', function(self, event, ...)
 end)
 
 function a:LOOT_OPENED(event, autoloot)
-    if IsFishingLoot() then
-        if not a.db.logging then return end
+    if not a.db.logging then return end
 
+    if IsFishingLoot() then
         for i = 1, GetNumLootItems(), 1 do
-            if (LootSlotIsItem(i)) then
+            if LootSlotIsItem(i) then
                 local _, name, quantity, quality = GetLootSlotInfo(i)
                 logCatch(name, quantity)
             end
+        end
+    end
+end
+
+function a:ZONE_CHANGED()
+    local zone, subzone = getZone()
+
+    if not a.db.stats[zone][subzone] then
+        if display and display:IsVisible() then
+            display:Hide()
+            return
+        end
+    else
+        if display then
+            if display:IsVisible() then
+                display:Update()
+            else
+                display:Show()
+                display:Update()
+            end
+        else
+            Stats:Show()
         end
     end
 end
@@ -361,7 +368,6 @@ function a:ADDON_LOADED(_, addon)
     a.db = skrFishStatsDB
 
     if not a.db.logging then a.db.logging = false end
-    if not a.db.liveDisplay then a.db.liveDisplay = true end
     if not a.db.stats then a.db.stats = {} end
     if not a.db.x then a.db.x = {} end
     if not a.db.y then a.db.y = {} end
@@ -372,7 +378,6 @@ end
 a.PLAYER_LOGOUT = a.checkLogging
 a.PLAYER_REGEN_DISABLED = a.checkLogging
 a.PLAYER_REGEN_ENABLED = a.checkLogging
-a.ZONE_CHANGED = a.checkLogging
 
 -- Slash Commands
 SlashCmdList["SKRFISHSTATS"] = function() Stats:Toggle() end
