@@ -162,15 +162,69 @@ local function countCoins(t)
     return t
 end
 
--- Display
-local display
+function setZone(zone, subzone)
+	if not zone then return end
+	zone = zone
+	if not subzone then subzone = zone end
+end
 
-local function displayUpdate(self)
+-- menu, <3 zork
+local display
+local dropdown = CreateFrame("Frame", "myMenuFrame", nil, "UIDropDownMenuTemplate")
+local menuTable, subMenu = {}, {}
+local line, delim = nil, "----------------------------------"
+
+local function wipeMenu()
+	menuTable, subMenu = {}, {}
+end
+
+local function createMenu()
+	-- title
+	line = { text = "skrFishStats: Zone Browser", isTitle = true, notCheckable = true, notClickable = true }
+	table.insert(menuTable, line)
+
+	line = { text = delim, notCheckable = true, notClickable = true }
+	table.insert(menuTable, line)
+
+	-- zones
+	for z, t in pairs(a.db.stats) do
+		if not subMenu[z] then subMenu[z] = {} end
+
+		line = { text = z, notCheckable = true, hasArrow = true, menuList = subMenu[z] }
+		table.insert(menuTable, line)
+
+		-- subzones
+		for sz, _ in pairs(t) do
+			line = { text = sz, func = function() display:Update(z, sz) end, notCheckable = 1, keepShownOnClick = true, }
+			table.insert(subMenu[z], line)
+		end
+
+		line = { text = delim, notCheckable = true, notClickable = true }
+		table.insert(menuTable,line)
+	end
+
+	-- close button
+	line = { text = "Close", func = function() wipeMenu() end, notCheckable = true }
+	table.insert(menuTable, line)
+end
+
+-- Display
+local function displayUpdate(self, z, sz)
     local total, height = 0, 0
-    local zone, subzone = getZone()
     local rank, modifier, skill = getSkill()
     local t = {}
-    local result = nil
+    local result, zone, subzone = nil, nil, nil
+
+	if not z then
+		zone, subzone = getZone()
+	else
+		zone = z
+		if not sz then
+			subzone = zone
+		else
+			subzone = sz
+		end
+	end
 
     self.caption:SetText(format("|cff44ccff%s|r: |cff44ccff%s|r", zone, subzone))
 
@@ -227,6 +281,13 @@ function Stats:Create()
         self:StopMovingOrSizing()
         a.db.x, a.db.y = self:GetCenter()
     end)
+	display:SetScript("OnMouseDown", function(self, button)
+		if button == "RightButton" then
+			createMenu()
+			EasyMenu(menuTable, dropdown, "cursor", 10 , -15, "MENU")
+			wipeMenu()
+		end
+	end)
     display:SetMovable(true)
     display:EnableMouse(true)
     display:RegisterForDrag("LeftButton")
