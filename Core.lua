@@ -15,6 +15,8 @@ local poles = {
     [45992] = true, -- Jeweled Fishing Pole
     [46337] = true, -- Staats' Fishing Pole
     [52678] = true, -- Jonathan's Fishing Pole
+	[84660] = true, -- Pandaren Fishing Pole
+	[84661] = true, -- Dragon Fishing Pole
 }
 
 local coinsCopper = {
@@ -195,7 +197,7 @@ local function createMenu()
 
 		-- subzones
 		for sz, _ in pairs(t) do
-			line = { text = sz, func = function() display:Update(z, sz) end, notCheckable = 1, keepShownOnClick = true, }
+			line = { text = name, func = function() display:Update(z, sz) end, notCheckable = 1, keepShownOnClick = true, }
 			table.insert(subMenu[z], line)
 		end
 
@@ -225,6 +227,8 @@ local function displayUpdate(self, z, sz)
 			subzone = sz
 		end
 	end
+
+	if not isZoneLogged(zone, subzone) then return end
 
     self.caption:SetText(format("|cff44ccff%s|r: |cff44ccff%s|r", zone, subzone))
 
@@ -395,7 +399,7 @@ function a:LOOT_OPENED(event, autoloot)
 
     if IsFishingLoot() then
         for i = 1, GetNumLootItems(), 1 do
-            if LootSlotIsItem(i) then
+            if LootSlotHasItem(i) then
                 local _, name, quantity, quality = GetLootSlotInfo(i)
                 logCatch(name, quantity)
             end
@@ -451,9 +455,7 @@ a.PLAYER_REGEN_ENABLED = a.checkLogging
 
 -- Slash Commands
 SlashCmdList["SKRFISHSTATS"] = function() Stats:Toggle() end
-SLASH_SKRFISHSTATS1 = "/skrfishdata"
-SLASH_SKRFISHSTATS2 = "/skrfish"
-SLASH_SKRFISHSTATS3 = "/skrfs"
+SLASH_SKRFISHSTATS1 = "/skrfs"
 
 -- Register 
 a:RegisterEvent('PLAYER_LOGOUT')
