@@ -15,8 +15,8 @@ local poles = {
     [45992] = true, -- Jeweled Fishing Pole
     [46337] = true, -- Staats' Fishing Pole
     [52678] = true, -- Jonathan's Fishing Pole
-	[84660] = true, -- Pandaren Fishing Pole
-	[84661] = true, -- Dragon Fishing Pole
+    [84660] = true, -- Pandaren Fishing Pole
+    [84661] = true, -- Dragon Fishing Pole
 }
 
 local coinsCopper = {
@@ -82,7 +82,7 @@ local coinsGold = {
 }
 
 local backdrop = {
-	bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+    bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
 }
 
 local backdropColor = { 0, 0, 0, 0.8 }
@@ -96,7 +96,7 @@ a.Stats = Stats
 
 -- Functions
 local fishSortCount = function(a, b)
-	return a.count > b.count
+    return a.count > b.count
 end
 
 local function getZone()
@@ -113,6 +113,7 @@ local function isZoneLogged(zone, subzone)
     if not a.db.stats[zone] or not a.db.stats[zone][subzone] then
         return false
     end
+
     return true
 end
 
@@ -165,9 +166,9 @@ local function countCoins(t)
 end
 
 function setZone(zone, subzone)
-	if not zone then return end
-	zone = zone
-	if not subzone then subzone = zone end
+    if not zone then return end
+    zone = zone
+    if not subzone or subzone == '' then subzone = zone end
 end
 
 -- menu, <3 zork
