@@ -125,39 +125,31 @@ local function getSkill()
 end
 
 local function countCoins(t)
-    local copper, silver, gold = 0, 0, 0
+    local count = function(coins)
+        local n = 0
+        for _, exception in pairs(coins) do
+            for i, fish in pairs(t) do
+                if fish.name == exception then
+                    n = n + fish.count
+                    table.remove(t, i)
+                end
+            end
+        end
 
-    for _, exception in pairs(coinsCopper) do
-        for i, fish in pairs(t) do
-            if fish.name == exception then
-                copper = copper + fish.count
-                table.remove(t, i)
-            end
-        end
-    end
-    for _, exception in pairs(coinsSilver) do
-        for i, fish in pairs(t) do
-            if fish.name == exception then
-                silver = silver + fish.count
-                table.remove(t, i)
-            end
-        end
-    end
-    for _, exception in pairs(coinsGold) do
-        for i, fish in pairs(t) do
-            if fish.name == exception then
-                gold = gold + fish.count
-                table.remove(t, i)
-            end
-        end
+        return n
     end
 
+    local copper = count(coinsCopper)
     if copper > 0 then
         table.insert(t, { name = "|cffeda55fCopper Coins|r", count = copper })
     end
+
+    local silver = count(coinsSilver)
     if silver > 0 then
         table.insert(t, { name = "|cffc7c7cfSilver Coins|r", count = silver })
     end
+
+    local gold = count(coinsGold)
     if gold > 0 then
         table.insert(t, { name = "|cffffd700Gold Coins|r", count = gold })
     end
