@@ -157,12 +157,6 @@ local function countCoins(t)
     return t
 end
 
-function setZone(zone, subzone)
-    if not zone then return end
-    zone = zone
-    if not subzone or subzone == '' then subzone = zone end
-end
-
 -- menu, <3 zork
 local display
 local dropdown = CreateFrame("Frame", "myMenuFrame", nil, "UIDropDownMenuTemplate")
