@@ -235,11 +235,11 @@ local function displayUpdate(self, z, sz)
 
         for _, fish in pairs(t) do
             local percent = fish.count / total * 100
-            result = (result or "")..format("%s (|cffffff00%d|r, |cff00ff00%.1f|r%%)\n", fish.name, fish.count, percent)
+            result = (result or "")..format("%s (|cffffff00%d|r, |cff00ff00%.1f|r%%)|n", fish.name, fish.count, percent)
         end
     end
 
-    height = (table.getn(t) * 12) + 56
+    height = (table.getn(t) * 13) + 56
     display.text:SetText(result)
     display:SetHeight(height)
 end
@@ -292,7 +292,7 @@ function Stats:Create()
     caption:SetJustifyH("LEFT")
 
     local text = display:CreateFontString(nil, "OVERLAY", "GameFontHighlight") -- size: 12
-    text:SetPoint("BOTTOMLEFT", 8, 0)
+    text:SetPoint("TOPLEFT", 8, -48)
     text:SetJustifyH("LEFT")
 
     display.caption = caption
