@@ -1,8 +1,8 @@
-## Interface: 40300
+## Interface: 60000
 ## Title: |cFFC79C6Eskr|r|cffffffffFishStats
 ## Notes: Lightweight fishing stats.
-## Author: Skroop @ US - Dark Iron
-## Version: 0.1
+## Author: Skroop
+## Version: 0.2
 ## LoadManagers: AddonLoader
 ## X-LoadOn-Always: delayed
 ## SavedVariables: skrFishStatsDB
