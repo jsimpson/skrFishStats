@@ -17,6 +17,10 @@ local poles = {
     [52678] = true, -- Jonathan's Fishing Pole
     [84660] = true, -- Pandaren Fishing Pole
     [84661] = true, -- Dragon Fishing Pole
+	[116825] = true, -- Savage Fishing Pole
+	[116826] = true, -- Draenic Fishing Pole
+	[118381] = true, -- Ephemeral Fishing Pole
+	[120163] = true, -- Thruk's Fishing Rod
 }
 
 local coinsCopper = {
