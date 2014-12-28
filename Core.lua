@@ -243,7 +243,7 @@ local function displayUpdate(self, z, sz)
         end
     end
 
-    height = (table.getn(t) * 13) + 56
+    height = (table.getn(t) * 12) + 56
     display.text:SetText(result)
     display:SetHeight(height)
 end
