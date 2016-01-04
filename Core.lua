@@ -17,10 +17,10 @@ local poles = {
     [ 52678] = true, -- Jonathan's Fishing Pole
     [ 84660] = true, -- Pandaren Fishing Pole
     [ 84661] = true, -- Dragon Fishing Pole
-	[116825] = true, -- Savage Fishing Pole
-	[116826] = true, -- Draenic Fishing Pole
-	[118381] = true, -- Ephemeral Fishing Pole
-	[120163] = true, -- Thruk's Fishing Rod
+    [116825] = true, -- Savage Fishing Pole
+    [116826] = true, -- Draenic Fishing Pole
+    [118381] = true, -- Ephemeral Fishing Pole
+    [120163] = true, -- Thruk's Fishing Rod
 }
 
 local coinsCopper = {
@@ -168,37 +168,37 @@ local menuTable, subMenu = {}, {}
 local line, delim = nil, "----------------------------------"
 
 local function wipeMenu()
-	menuTable, subMenu = {}, {}
+    menuTable, subMenu = {}, {}
 end
 
 local function createMenu()
-	-- title
-	line = { text = "skrFishStats: Zone Browser", isTitle = true, notCheckable = true, notClickable = true }
-	table.insert(menuTable, line)
+    -- title
+    line = { text = "skrFishStats: Zone Browser", isTitle = true, notCheckable = true, notClickable = true }
+    table.insert(menuTable, line)
 
-	line = { text = delim, notCheckable = true, notClickable = true }
-	table.insert(menuTable, line)
+    line = { text = delim, notCheckable = true, notClickable = true }
+    table.insert(menuTable, line)
 
-	-- zones
-	for z, t in pairs(a.db.stats) do
-		if not subMenu[z] then subMenu[z] = {} end
+    -- zones
+    for z, t in pairs(a.db.stats) do
+        if not subMenu[z] then subMenu[z] = {} end
 
-		line = { text = z, notCheckable = true, hasArrow = true, menuList = subMenu[z] }
-		table.insert(menuTable, line)
+        line = { text = z, notCheckable = true, hasArrow = true, menuList = subMenu[z] }
+        table.insert(menuTable, line)
 
-		-- subzones
-		for sz, _ in pairs(t) do
-			line = { text = sz, func = function() display:Update(z, sz) end, notCheckable = 1, keepShownOnClick = true, }
-			table.insert(subMenu[z], line)
-		end
+        -- subzones
+        for sz, _ in pairs(t) do
+            line = { text = sz, func = function() display:Update(z, sz) end, notCheckable = 1, keepShownOnClick = true, }
+            table.insert(subMenu[z], line)
+        end
 
-		line = { text = delim, notCheckable = true, notClickable = true }
-		table.insert(menuTable,line)
-	end
+        line = { text = delim, notCheckable = true, notClickable = true }
+        table.insert(menuTable,line)
+    end
 
-	-- close button
-	line = { text = "Close", func = function() wipeMenu() end, notCheckable = true }
-	table.insert(menuTable, line)
+    -- close button
+    line = { text = "Close", func = function() wipeMenu() end, notCheckable = true }
+    table.insert(menuTable, line)
 end
 
 -- Display
@@ -208,18 +208,18 @@ local function displayUpdate(self, z, sz)
     local t = {}
     local result, zone, subzone = nil, nil, nil
 
-	if not z then
-		zone, subzone = getZone()
-	else
-		zone = z
-		if not sz then
-			subzone = zone
-		else
-			subzone = sz
-		end
-	end
+    if not z then
+        zone, subzone = getZone()
+    else
+        zone = z
+        if not sz then
+            subzone = zone
+        else
+            subzone = sz
+        end
+    end
 
-	if not isZoneLogged(zone, subzone) then return end
+    if not isZoneLogged(zone, subzone) then return end
 
     self.caption:SetText(format("|cff44ccff%s|r: |cff44ccff%s|r", zone, subzone))
 
@@ -276,13 +276,13 @@ function Stats:Create()
         self:StopMovingOrSizing()
         a.db.x, a.db.y = self:GetCenter()
     end)
-	display:SetScript("OnMouseDown", function(self, button)
-		if button == "RightButton" then
-			createMenu()
-			EasyMenu(menuTable, dropdown, "cursor", 10 , -15, "MENU")
-			wipeMenu()
-		end
-	end)
+    display:SetScript("OnMouseDown", function(self, button)
+        if button == "RightButton" then
+            createMenu()
+            EasyMenu(menuTable, dropdown, "cursor", 10 , -15, "MENU")
+            wipeMenu()
+        end
+    end)
     display:SetMovable(true)
     display:EnableMouse(true)
     display:RegisterForDrag("LeftButton")
@@ -449,7 +449,7 @@ a.PLAYER_REGEN_ENABLED = a.checkLogging
 SlashCmdList["SKRFISHSTATS"] = function() Stats:Toggle() end
 SLASH_SKRFISHSTATS1 = "/skrfs"
 
--- Register 
+-- Register
 a:RegisterEvent('PLAYER_LOGOUT')
 a:RegisterEvent('PLAYER_REGEN_DISABLED')
 a:RegisterEvent('PLAYER_REGEN_ENABLED')
